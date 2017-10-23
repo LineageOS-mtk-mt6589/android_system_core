@@ -1104,6 +1104,34 @@ int audit_callback(void *data, security_class_t cls, char *buf, size_t len)
     return 0;
 }
 
+#ifdef MTK_HARDWARE
+static int get_boot_mode(void)
+{
+  int fd;
+  size_t s;
+  char boot_mode[4] = {'0'};
+
+  fd = open("/sys/class/BOOT/BOOT/boot/boot_mode", O_RDWR);
+  if (fd < 0)
+  {
+    ERROR("fail to open: %s\n", "/sys/class/BOOT/BOOT/boot/boot_mode");
+    return 0;
+  }
+
+  s = read(fd, (void *)&boot_mode, sizeof(boot_mode) - 1);
+  close(fd);
+
+  if(s <= 0)
+  {
+	ERROR("could not read boot mode sys file\n");
+    return 0;
+  }
+
+  boot_mode[s] = '\0';
+  return atoi(&boot_mode);
+}
+#endif
+
 static int charging_mode_booting(void)
 {
 #ifndef BOARD_CHARGING_MODE_BOOTING_LPM
@@ -1155,7 +1183,11 @@ int main(int argc, char **argv)
     int signal_fd_init = 0;
     int keychord_fd_init = 0;
     bool is_charger = false;
+#ifdef MTK_HARDWARE
+    int mt_boot_mode = 0;
 
+    klog_set_level(6);
+#endif
     if (!strcmp(basename(argv[0]), "ueventd"))
         return ueventd_main(argc, argv);
 
@@ -1227,12 +1259,23 @@ int main(int argc, char **argv)
         property_load_boot_defaults();
 
     INFO("reading config file\n");
-
+#ifdef MTK_HARDWARE
+    mt_boot_mode = get_boot_mode();
+if (mt_boot_mode == 8 || mt_boot_mode == 9)
+	{
+		printf("KERNEL Power Off Charging Booting.....\n");
+		init_parse_config_file("/init.charging.rc");
+	}
+else
+	{
+		init_parse_config_file("/init.rc");
+	}
+#else	
     if (!charging_mode_booting())
        init_parse_config_file("/init.rc");
     else
        init_parse_config_file("/lpm.rc");
-
+#endif
     /* Check for an emmc initialisation file and read if present */
     if (emmc_boot && access("/init.emmc.rc", R_OK) == 0) {
         INFO("Reading emmc config file");
@@ -1284,7 +1327,13 @@ int main(int argc, char **argv)
 
     if (is_charger) {
         action_for_each_trigger("charger", action_add_queue_tail);
-    } else {
+    }
+#ifdef MTK_HARDWARE
+    else if (mt_boot_mode == 8 || mt_boot_mode == 9){
+        action_for_each_trigger("ipo", action_add_queue_tail);
+    } 
+#endif // MTK_INIT
+ else {
         action_for_each_trigger("early-boot", action_add_queue_tail);
         action_for_each_trigger("boot", action_add_queue_tail);
     }
