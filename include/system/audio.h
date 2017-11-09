@@ -59,6 +59,7 @@ typedef enum {
 #ifdef QCOM_HARDWARE
     AUDIO_STREAM_INCALL_MUSIC     = 10,
 #endif
+    AUDIO_STREAM_FM               = 10,
 
     AUDIO_STREAM_CNT,
     AUDIO_STREAM_MAX              = AUDIO_STREAM_CNT - 1,
@@ -82,6 +83,7 @@ typedef enum {
                                           /*  play the mix captured by this audio source.      */
     AUDIO_SOURCE_FM_RX               = 9,
     AUDIO_SOURCE_FM_RX_A2DP          = 10,
+    AUDIO_SOURCE_FM =99,
     AUDIO_SOURCE_CNT,
     AUDIO_SOURCE_MAX                 = AUDIO_SOURCE_CNT - 1,
     AUDIO_SOURCE_HOTWORD             = 1999, /* A low-priority, preemptible audio source for
