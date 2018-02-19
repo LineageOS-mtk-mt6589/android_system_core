@@ -66,17 +66,25 @@ struct {
     unsigned int gid;
 } property_perms[] = {
     { "net.rmnet",        AID_RADIO,    0 },
+    { "net.rmnet0.",      AID_RADIO,    0 },
     { "net.gprs.",        AID_RADIO,    0 },
     { "net.ppp",          AID_RADIO,    0 },
     { "net.qmi",          AID_RADIO,    0 },
     { "net.lte",          AID_RADIO,    0 },
     { "net.cdma",         AID_RADIO,    0 },
     { "ril.",             AID_RADIO,    0 },
+    { "persist.ril.",     AID_RADIO,    0 },
+    { "persist.ril.cfu.querytype", AID_APP,   0 },
+    { "mux.",             AID_RADIO,    0 },
+    { "mux.",             AID_SYSTEM,   0 },
+    { "mtk_telephony_mode_slot1",             AID_SYSTEM,   0 },
+    { "mtk_telephony_mode_slot2",             AID_SYSTEM,   0 },
     { "gsm.",             AID_RADIO,    0 },
     { "persist.radio",    AID_RADIO,    0 },
     { "net.dns",          AID_RADIO,    0 },
     { "sys.usb.config",   AID_RADIO,    0 },
     { "net.",             AID_SYSTEM,   0 },
+    { "net.",             AID_DHCP,   0 },
     { "dev.",             AID_SYSTEM,   0 },
     { "runtime.",         AID_SYSTEM,   0 },
     { "hw.",              AID_SYSTEM,   0 },
@@ -86,6 +94,7 @@ struct {
     { "wlan.",            AID_SYSTEM,   0 },
     { "bluetooth.",       AID_BLUETOOTH,    0 },
     { "dhcp.",            AID_SYSTEM,   0 },
+    { "bwc.mm.",          AID_SYSTEM,   0 },
     { "dhcp.",            AID_DHCP,     0 },
     { "debug.",           AID_SYSTEM,   0 },
     { "debug.",           AID_SHELL,    0 },
@@ -105,6 +114,25 @@ struct {
 #ifdef MTK_HARDWARE
     { "nvram_init",      AID_NVRAM,   0 },
     { "gps.",            AID_GPS,     AID_SYSTEM },
+    { "persist.af.",      AID_MEDIA,   0 },
+    { "af.",              AID_MEDIA,   0 },
+    { "a2dp.",            AID_MEDIA,   0 },
+    { "streamin.",        AID_MEDIA,   0 },
+    { "streamout.",       AID_MEDIA,   0 },
+    { "bwc.mm.",          AID_MEDIA,   0 },
+    { "mediatek.",        AID_RADIO,   0 },
+    { "bt.",        AID_BLUETOOTH,    0 },
+    { "persist.bt.",      AID_BLUETOOTH,    0 },
+    { "persist.mtk.wcn.combo.",        AID_SYSTEM,    0 },
+    { "persist.mtklog.",  AID_SHELL,   0 },
+    { "ter.",             AID_RADIO,    0 },
+    { "persist.ter.",     AID_RADIO,    0 },
+    { "media.wfd",  AID_SYSTEM,   AID_MEDIA },
+    { "wfd.",  AID_SYSTEM,   AID_MEDIA },
+    { "persist.bootanim.",  AID_GRAPHICS,   0 },
+    { "gps.",             AID_GPS,     AID_SYSTEM },
+    { "bgw.", 				AID_SYSTEM,    0 },
+    { "cdma.",        AID_RADIO,    0 },    //Add by gfzhu VIA
 #endif
 #ifdef PROPERTY_PERMS_APPEND
 PROPERTY_PERMS_APPEND
@@ -124,8 +152,12 @@ struct {
     unsigned int uid;
     unsigned int gid;
 } control_perms[] = {
-    { "dumpstate",AID_SHELL, AID_LOG },
-    { "ril-daemon",AID_RADIO, AID_RADIO },
+    { "dumpstate", AID_SHELL, AID_LOG },
+    { "ril-daemon", AID_RADIO, AID_RADIO },
+    { "muxreport-daemon", AID_RADIO, AID_RADIO },
+    { "md_minilog_util", AID_RADIO, AID_RADIO},
+    { "pppd_csd", AID_RADIO, AID_RADIO},
+    { "sysctl", AID_SHELL, AID_SHELL},
     { "pre-recovery", AID_SYSTEM, AID_SYSTEM },
 #ifdef CONTROL_PERMS_APPEND
 CONTROL_PERMS_APPEND
