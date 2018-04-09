@@ -54,6 +54,10 @@ $(foreach system_core_init_define,$(SYSTEM_CORE_INIT_DEFINES), \
   ) \
   )
 
+ifeq ($(TARGET_BOARD_PLATFORM),mt6589)
+LOCAL_CFLAGS += -DMTK_MT6589
+endif
+
 LOCAL_MODULE:= init
 
 LOCAL_FORCE_STATIC_EXECUTABLE := true
